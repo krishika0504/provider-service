@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import jakarta.servlet.DispatcherType;
 
 @Configuration
 @EnableMethodSecurity
@@ -79,6 +80,17 @@ public class SecurityConfig {
                                 "/api/providers/matching-candidates",
                                 "/internal/providers/performance/**"
                         ).permitAll()
+                        .requestMatchers(
+                                "/api/providers/me/offers/**"
+                        ).hasRole("PROVIDER")
+                        .dispatcherTypeMatchers(
+                                DispatcherType.ERROR
+                        ).permitAll()
+                        .requestMatchers(
+                                "/internal/**"
+                        ).permitAll()
+
+                        .requestMatchers("/error").permitAll()
 
                         .anyRequest()
                         .authenticated()

@@ -1,20 +1,15 @@
 package com.homeserve.provider.dto.notification;
 
-import com.homeserve.provider.entity.DeviceType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class RegisterDeviceRequest {
+public class UnregisterDeviceRequest {
 
     @NotBlank(message = "Device token is required")
-    @Size(max = 500, message = "Device token is too long")
+    @Size(max = 500)
     private String deviceToken;
-
-    @NotNull(message = "Device type is required")
-    private DeviceType deviceType;
 }
