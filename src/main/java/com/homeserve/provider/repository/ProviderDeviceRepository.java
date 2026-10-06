@@ -9,11 +9,16 @@ import java.util.Optional;
 public interface ProviderDeviceRepository
         extends JpaRepository<ProviderDevice, Long> {
 
-    Optional<ProviderDevice> findByDeviceToken(String deviceToken);
+    Optional<ProviderDevice> findByDeviceToken(
+            String deviceToken
+    );
 
-    List<ProviderDevice> findByProviderIdAndActiveTrue(Long providerId);
+    List<ProviderDevice> findByProviderIdAndActiveTrue(
+            Long providerId
+    );
 
-    Optional<ProviderDevice> findByProviderIdAndDeviceToken(
+    Optional<ProviderDevice>
+    findByProviderIdAndDeviceToken(
             Long providerId,
             String deviceToken
     );
