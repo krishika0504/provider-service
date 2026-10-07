@@ -11,6 +11,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class ProviderServiceApplication {
 
     public static void main(String[] args) {
+        com.homeserve.provider.config.EnvLoader.load();
         SpringApplication.run(ProviderServiceApplication.class, args);
     }
 }
