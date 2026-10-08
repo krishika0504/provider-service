@@ -79,6 +79,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/providers/matching-candidates",
                                 "/internal/providers/performance/**"
+                                ,"/api/providers/me/availability/**"
                         ).permitAll()
                         .requestMatchers(
                                 "/api/providers/me/offers/**"

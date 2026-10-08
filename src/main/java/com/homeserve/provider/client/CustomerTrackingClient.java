@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @FeignClient(
-        name = "customer-service"
+        name = "customer-service",
+        contextId = "customerTrackingClient"
 )
 public interface CustomerTrackingClient {
 
