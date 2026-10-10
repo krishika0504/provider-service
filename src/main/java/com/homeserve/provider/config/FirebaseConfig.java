@@ -5,6 +5,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,61 +15,49 @@ import java.io.IOException;
 @Slf4j
 public class FirebaseConfig {
 
-    // =========================================================
-    // FIREBASE APP
-    // =========================================================
+    @Value("${firebase.project-id}")
+    private String firebaseProjectId;
+
 
     @Bean
-    public FirebaseApp firebaseApp() throws IOException {
+    public FirebaseApp firebaseApp()
+            throws IOException {
 
-        /*
-         * Prevent duplicate Firebase initialization.
-         *
-         * Useful during Spring context reloads/tests.
-         */
-        if (!FirebaseApp.getApps().isEmpty()) {
-
-            log.info(
-                    "Firebase already initialized. Using existing FirebaseApp."
-            );
-
-            return FirebaseApp.getInstance();
-        }
-
-
-        /*
-         * Reads credentials from:
-         *
-         * GOOGLE_APPLICATION_CREDENTIALS
-         *
-         * Example:
-         *
-         * D:\\firebase\\homeserve-firebase-admin.json
-         */
         GoogleCredentials credentials =
                 GoogleCredentials
                         .getApplicationDefault();
 
 
         FirebaseOptions options =
-                FirebaseOptions.builder()
+                FirebaseOptions
+                        .builder()
 
                         .setCredentials(
                                 credentials
                         )
 
+                        .setProjectId(
+                                firebaseProjectId
+                        )
+
                         .build();
 
 
-        FirebaseApp app =
-                FirebaseApp.initializeApp(
-                        options
-                );
+        FirebaseApp firebaseApp;
 
+        if (FirebaseApp.getApps().isEmpty()) {
 
-        log.info(
-                "========================================"
-        );
+            firebaseApp =
+                    FirebaseApp.initializeApp(
+                            options
+                    );
+
+        } else {
+
+            firebaseApp =
+                    FirebaseApp.getInstance();
+        }
+
 
         log.info(
                 "Firebase Admin SDK initialized successfully"
@@ -76,29 +65,29 @@ public class FirebaseConfig {
 
         log.info(
                 "Firebase App Name: {}",
-                app.getName()
+                firebaseApp.getName()
         );
 
         log.info(
-                "========================================"
+                "Firebase Project ID: {}",
+                firebaseApp
+                        .getOptions()
+                        .getProjectId()
         );
 
 
-        return app;
+        return firebaseApp;
     }
 
-
-    // =========================================================
-    // FIREBASE MESSAGING
-    // =========================================================
 
     @Bean
     public FirebaseMessaging firebaseMessaging(
             FirebaseApp firebaseApp
     ) {
 
-        return FirebaseMessaging.getInstance(
-                firebaseApp
-        );
+        return FirebaseMessaging
+                .getInstance(
+                        firebaseApp
+                );
     }
 }

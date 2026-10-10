@@ -37,6 +37,12 @@ Thumbs.db
 
 !.env.example
 
+
+# Firebase secrets
+firebase-service-account.json
+serviceAccountKey.json
+*-firebase-admin*.json
+
 application-local.properties
 application-prod.properties
 
