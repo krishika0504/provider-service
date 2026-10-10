@@ -20,6 +20,10 @@ import java.time.LocalDateTime;
                 @Index(
                         name = "idx_provider_status_verified",
                         columnList = "status, verified"
+                ),
+                @Index(
+                        name = "idx_provider_available_for_jobs",
+                        columnList = "available_for_jobs"
                 )
         }
 )
@@ -35,20 +39,29 @@ public class Provider {
     private Long id;
 
 
-    // ==========================================
+    // =========================================================
     // PERSONAL INFORMATION
-    // ==========================================
+    // =========================================================
 
-    @Column(name = "first_name", nullable = false, length = 100)
+    @Column(
+            name = "first_name",
+            nullable = false,
+            length = 100
+    )
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 100)
+
+    @Column(
+            name = "last_name",
+            nullable = false,
+            length = 100
+    )
     private String lastName;
 
 
-    // ==========================================
+    // =========================================================
     // CONTACT / LOGIN
-    // ==========================================
+    // =========================================================
 
     @Column(
             nullable = false,
@@ -57,12 +70,14 @@ public class Provider {
     )
     private String email;
 
+
     @Column(
             nullable = false,
             unique = true,
             length = 20
     )
     private String phone;
+
 
     @Column(
             nullable = false,
@@ -71,9 +86,14 @@ public class Provider {
     private String password;
 
 
-    // ==========================================
-    // PROVIDER STATUS
-    // ==========================================
+    // =========================================================
+    // ACCOUNT STATUS
+    //
+    // ACTIVE != online
+    //
+    // ACTIVE means provider account is allowed to operate.
+    // availableForJobs means provider currently wants jobs.
+    // =========================================================
 
     @Enumerated(EnumType.STRING)
     @Column(
@@ -84,6 +104,7 @@ public class Provider {
     private ProviderStatus status =
             ProviderStatus.PENDING_VERIFICATION;
 
+
     @Column(
             nullable = false
     )
@@ -91,33 +112,41 @@ public class Provider {
     private Boolean verified = false;
 
 
-    // ==========================================
-    // PROFESSIONAL INFORMATION
-    // ==========================================
+    // =========================================================
+    // JOB AVAILABILITY
+    //
+    // true  = ONLINE / accepting jobs
+    // false = OFFLINE / not accepting jobs
+    // =========================================================
 
-    @Column(name = "experience_years")
+    @Column(
+            name = "available_for_jobs",
+            nullable = false
+    )
+    @Builder.Default
+    private Boolean availableForJobs = false;
+
+
+    // =========================================================
+    // PROFESSIONAL INFORMATION
+    // =========================================================
+
+    @Column(
+            name = "experience_years"
+    )
     private Integer experienceYears;
 
-    @Column(name = "profile_image_url", length = 500)
+
+    @Column(
+            name = "profile_image_url",
+            length = 500
+    )
     private String profileImageUrl;
 
 
-    // ==========================================
-    // AUDIT FIELDS
-    // ==========================================
-
-    @Column(
-            name = "created_at",
-            nullable = false,
-            updatable = false
-    )
-    private LocalDateTime createdAt;
-
-    @Column(
-            name = "updated_at",
-            nullable = false
-    )
-    private LocalDateTime updatedAt;
+    // =========================================================
+    // LOCATION
+    // =========================================================
 
     @OneToOne(
             mappedBy = "provider",
@@ -126,30 +155,60 @@ public class Provider {
     private ProviderLocation location;
 
 
-    // ==========================================
-    // LIFECYCLE CALLBACKS
-    // ==========================================
+    // =========================================================
+    // AUDIT
+    // =========================================================
+
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false
+    )
+    private LocalDateTime createdAt;
+
+
+    @Column(
+            name = "updated_at",
+            nullable = false
+    )
+    private LocalDateTime updatedAt;
+
+
+    // =========================================================
+    // LIFECYCLE
+    // =========================================================
 
     @PrePersist
     protected void onCreate() {
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now =
+                LocalDateTime.now();
 
         createdAt = now;
         updatedAt = now;
 
+
         if (status == null) {
-            status = ProviderStatus.PENDING_VERIFICATION;
+            status =
+                    ProviderStatus.PENDING_VERIFICATION;
         }
+
 
         if (verified == null) {
             verified = false;
         }
+
+
+        if (availableForJobs == null) {
+            availableForJobs = false;
+        }
     }
+
 
     @PreUpdate
     protected void onUpdate() {
 
-        updatedAt = LocalDateTime.now();
+        updatedAt =
+                LocalDateTime.now();
     }
 }

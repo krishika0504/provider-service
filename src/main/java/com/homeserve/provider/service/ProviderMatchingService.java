@@ -73,9 +73,6 @@ public class ProviderMatchingService {
         List<Provider> providers =
                 matchingRepository.findEligibleProviders(
                         serviceId,
-                        requestedDate,
-                        requestedStartTime,
-                        requestedEndTime,
                         ProviderStatus.ACTIVE,
                         true
                 );
